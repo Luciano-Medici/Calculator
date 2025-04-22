@@ -82,58 +82,50 @@ function cleanGlobalVariables (){
 }
 
 function populate(digit){
-    if (digit == "C"){
+    let isOperator = digit == "+" || digit == "-" || digit == "*" || digit == "/";
+    let isNumber = digit >= "0" && digit <= "9";
+    let isClear = digit == "C";
+    let isBackspace = digit == "Backspace";
+    let isDot = digit == ".";
+    let isEnter = digit == "Enter" || digit == "=";
+
+    if (isClear){
         cleanGlobalVariables();
         displayContent = "";
-    }else if (digit == "Backspace" && numActual != ""){
+    }else if (isBackspace){
         numActual = numActual.slice(0, -1); 
         displayContent = numActual;
-    }else if ((digit >= "0" && digit <= "9") && numActual.length < 13) {
+    }else if (isNumber && numActual.length < 13) {
         numActual += digit;
         displayContent = numActual;
-        lastDigit = true;
-    } else if ((digit == "+" ||
-        digit == "-" ||
-        digit == "*" ||
-        digit == "/") &&
-        !numOne &&
-        lastDigit){
+    } else if (isOperator && !numOne){
             numOne = Number(numActual);
             operator = digit;
             numActual = "";
             displayContent = numOne;
-            lastDigit = false;
-    } else if ((digit == "+" ||
-        digit == "-" ||
-        digit == "*" ||
-        digit == "/") &&
-        numOne &&
-        lastDigit){
+    } else if (isOperator && numOne){
             numTwo = Number(numActual);
             numOne = operate(numOne, numTwo, operator);
             if (numOne.toString().length > 12) {
-                numOne = Number(numOne).toPrecision(11); 
+                numOne = Number(numOne).toFixed(11); 
             }
             displayContent = numOne;
             numActual = ""
             operator = digit;
-            lastDigit = false;
-    } else if((digit == "=" || digit == "Enter")&& numOne && lastDigit){
+    } else if(isEnter && numOne){
         numActual = operate(Number(numOne), Number(numActual), operator);
         if (numActual.toString().length > 12) {
-            numActual = Number(numActual).toPrecision(11); 
+            numActual = Number(numActual).toFixed(11); 
         }
         displayContent = numActual;
         cleanGlobalVariables();
-    } else if(digit == "." && numActual % 1 == 0 && lastDigit){
+    } else if(isDot && numActual % 1 == 0){
         numActual += digit
         displayContent = numActual;
-        lastDigit = false;
     }
     return displayContent;
 }
 
-let lastDigit = true;
 let result = 0;
 let numOne = null;
 let numTwo = null;
@@ -160,5 +152,4 @@ for (i=0; i<18; i++){
 const calculator = document.querySelector("html");
 calculator.addEventListener("keydown", (e) => {
     display.textContent = populate(e.key);
-    console.log(e.key);
 })
