@@ -30,6 +30,7 @@ body{
     display: flex;
     justify-content: end;
     align-items: end;
+    font-size: xxx-large;
 }
 
 #buttons{
@@ -38,7 +39,7 @@ body{
     height: 527px;
     display: flex;
     justify-content: end;
-    align-items: center;
+    align-items: end;
     flex-wrap: wrap-reverse;
     gap: 20px;
 }
